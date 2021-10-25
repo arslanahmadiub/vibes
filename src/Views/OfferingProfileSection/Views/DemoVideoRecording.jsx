@@ -46,7 +46,7 @@ const DemoVideoRecording = () => {
             className="videoInsertDemo"
             src={
               process.env.NODE_ENV === "production"
-                ? "https://master.d2l3diefyd0jb2.amplifyapp.com/" + demoVideo
+                ? "https://master.d2e4yolnkc1zup.amplifyapp.com" + demoVideo
                 : demoVideo
             }
             type="video/mp4"
