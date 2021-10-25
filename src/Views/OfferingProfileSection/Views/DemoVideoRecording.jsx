@@ -42,11 +42,7 @@ const DemoVideoRecording = () => {
         <div className="video-container">
           <video
             className="videoInsertDemo"
-            src={
-              process.env.NODE_ENV === "production"
-                ? "https://www.youtube.com/watch?v=nRBneExGs5Y"
-                : demoVideo
-            }
+            src="https://vibes-files.s3.amazonaws.com/demo.mp4"
             type="video/mp4"
             ref={videoRef}
             onEnded={() => myCallback()}
