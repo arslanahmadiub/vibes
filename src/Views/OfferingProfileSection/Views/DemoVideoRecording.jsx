@@ -10,8 +10,6 @@ import { useHistory } from "react-router";
 const DemoVideoRecording = () => {
   let history = useHistory();
 
-  console.log(process.env.NODE_ENV);
-
   const videoRef = useRef();
   const [showPlayButton, setShowPlayButton] = useState(true);
   const [reloadNext, setReloadNext] = useState(false);
@@ -46,7 +44,7 @@ const DemoVideoRecording = () => {
             className="videoInsertDemo"
             src={
               process.env.NODE_ENV === "production"
-                ? "https://master.d2e4yolnkc1zup.amplifyapp.com" + demoVideo
+                ? "https://www.youtube.com/watch?v=nRBneExGs5Y"
                 : demoVideo
             }
             type="video/mp4"
