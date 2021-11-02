@@ -5,6 +5,7 @@ import RecordButtonScheme from "../Components/RecordButtonScheme";
 import demoVideo from "../../../assets/videos/demo.mp4";
 import playButton from "../../../assets/images/playButton.svg";
 import reloadVideo from "../../../assets/images/reloadVideo.svg";
+import endVideoIcon from "../../../assets/images/deleteBlack.svg";
 import { useHistory } from "react-router";
 
 const DemoVideoRecording = () => {
@@ -31,6 +32,12 @@ const DemoVideoRecording = () => {
     history.push("/record-video");
   };
 
+  let handelVideoEnd = () => {
+    setShowPlayButton(false);
+    videoRef.current.pause();
+    setReloadNext(true);
+  };
+
   return (
     <div className="div-background" style={{ height: "100vh" }}>
       <div className="bank-model linear-background">
@@ -42,7 +49,9 @@ const DemoVideoRecording = () => {
         <div className="video-container">
           <video
             className="videoInsertDemo"
-            src="https://vibes-files.s3.amazonaws.com/demo.mp4"
+            // src="https://vibes-files.s3.amazonaws.com/demo.mp4"
+            src="https://firebasestorage.googleapis.com/v0/b/vibes-10cab.appspot.com/o/video%2Fsample.mp4?alt=media&token=36f73a4f-9eb5-42b2-8379-1c28020106b7"
+            // src="https://firebasestorage.googleapis.com/v0/b/vibes-10cab.appspot.com/o/video%2Fdemo.mp4?alt=media&token=c43436bd-8089-41e1-805b-c31f5df808f8"
             type="video/mp4"
             ref={videoRef}
             onEnded={() => myCallback()}
@@ -74,6 +83,9 @@ const DemoVideoRecording = () => {
             <RecordButtonScheme title="Green" background="white" />
             <RecordButtonScheme title="Blue" background="white" />
             <RecordButtonScheme title="Orange" background="white" />
+          </div>
+          <div className="video-end-button" onClick={handelVideoEnd}>
+            <img src={endVideoIcon} alt="delete" />
           </div>
         </div>
         <div

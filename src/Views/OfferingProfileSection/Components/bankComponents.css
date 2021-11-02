@@ -134,14 +134,28 @@
   width: 8.5rem;
   height: 8.5rem;
   box-sizing: border-box;
+  position: relative;
 }
-.profile-image img {
+
+.profile-image .model-image {
   box-sizing: border-box;
   width: 8.5rem;
   height: 8.5rem;
   object-fit: cover;
   border-radius: 2rem;
   border: 2px solid var(--border-color);
+}
+
+.profile-image .upload-model-image {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  bottom: 7px;
+  right: 7px;
+}
+
+.input-image > input {
+  display: none;
 }
 
 .profile-info {
@@ -174,7 +188,21 @@
   width: 8.5rem;
   height: 8.5rem;
   box-sizing: border-box;
+  position: relative;
 }
+
+.profile-video .upload-model-video {
+  width: 23px;
+  height: 23px;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+.input-video > input {
+  display: none;
+}
+
 .profile-video img {
   box-sizing: border-box;
   width: 8.5rem;

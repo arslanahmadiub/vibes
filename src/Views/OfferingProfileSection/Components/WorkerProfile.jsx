@@ -1,12 +1,26 @@
 import React from "react";
 import "./bankComponents.css";
 import model1 from "../../../assets/images/model1.jpg";
+import uploadIcon from "../../../assets/images/uploadPlusIcon.svg";
 
-const WorkerProfile = ({ title, time, rate, location, ...props }) => {
+const WorkerProfile = ({
+  title,
+  time,
+  rate,
+  location,
+  uploadImage,
+  ...props
+}) => {
   return (
     <div className="profile-container">
       <div className="profile-image">
-        <img src={model1} alt="Image" />
+        <img src={model1} alt="Image" className="model-image" />
+        <div className="input-image">
+          <label for="file-input">
+            <img src={uploadIcon} alt="upload" className="upload-model-image" />
+          </label>
+          <input id="file-input" type="file" onChange={uploadImage} />
+        </div>
       </div>
       <div className="profile-info">
         <p className="profile-title">{title && title}</p>

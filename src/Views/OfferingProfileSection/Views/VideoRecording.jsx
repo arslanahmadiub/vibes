@@ -4,54 +4,95 @@ import RecordButton from "../Components/RecordButton";
 import RecordButtonScheme from "../Components/RecordButtonScheme";
 import { useHistory } from "react-router";
 import LogoSection from "../Components/LogoSection";
+import playVideoIcon from "../../../assets/images/playButton.svg";
+import reloadAgain from "../../../assets/images/reloadVideo.svg";
+
+let timerInterval;
+let sourceStream;
+let media_recorder = null;
+let blobs_recorded = [];
+let videoReference;
 
 const VideoRecording = () => {
   const videoRef = useRef();
   let history = useHistory();
-  const [startRecording, setstartRecording] = useState(false);
 
-  const [firstTime, setFirstTime] = useState(true);
+  const [startRecording, setstartRecording] = useState(false);
+  const [showRecordingScreen, setShowRecordingScreen] = useState(false);
+  const [cameraText, setCameraText] = useState(["Look in the camera"]);
+  const [playingVideo, setPlayingVideo] = useState(false);
+  const [playingVideoControls, setPlayingVideoControls] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCameraText((pre) => [...pre, "Push Button for Record"]);
+    }, 3000);
+
+    setTimeout(() => {
+      setCameraText((pre) => [...pre, "Read the color"]);
+    }, 6000);
+    setTimeout(() => {
+      setShowRecordingScreen(true);
+    }, 9000);
+  }, []);
 
   const [timer, setTimer] = useState(15);
 
-  var timerInterval;
-
   useEffect(() => {
-    let time = 15;
-    timerInterval = setInterval(() => {
-      if (startRecording) {
-        time = time - 1;
+    if (timer < 1) {
+      clearInterval(timerInterval);
+      setTimer(15);
+    }
+  }, [timer]);
 
-        setTimer(time);
-      }
-      if (!startRecording) {
-        clearInterval(timerInterval);
+  function handelRecording() {
+    if (showRecordingScreen) {
+      setstartRecording(true);
 
-        setTimer(15);
-      }
-      if (time < 1) {
-        handelStop();
-        setTimer(15);
+      media_recorder = new MediaRecorder(sourceStream, {
+        mimeType: "video/webm",
+      });
 
-        clearInterval(timerInterval);
-        history.push("/escort-section");
-      }
-    }, 1000);
-  }, [startRecording]);
+      // event : new recorded video blob available
+      media_recorder.addEventListener("dataavailable", function (e) {
+        blobs_recorded.push(e.data);
+      });
+      media_recorder.start(1000);
 
-  let handelRecording = () => {
-    setstartRecording(true);
-  };
+      timerInterval = setInterval(() => {
+        setTimer((pre) => pre - 1);
+      }, 1000);
+    }
+  }
+
+  function stopRecording() {
+    setstartRecording(false);
+
+    let video_local = URL.createObjectURL(
+      new Blob(blobs_recorded, { type: "video/webm" })
+    );
+
+    clearInterval(timerInterval);
+    setTimer(15);
+    // videoReference.srcObject = null;
+    handelStop();
+    setPlayingVideo(true);
+    setPlayingVideoControls(true);
+    videoReference.src = video_local;
+  }
 
   let getVideo = async () => {
+    blobs_recorded = [];
     try {
-      let stream = await navigator.mediaDevices.getUserMedia({
+      sourceStream = await navigator.mediaDevices.getUserMedia({
         video: true,
+        audio: true,
       });
-      let video = videoRef.current;
+      videoReference = videoRef.current;
 
-      video.srcObject = stream;
-      video.play();
+      videoReference.srcObject = sourceStream;
+      videoReference.muted = true;
+      videoReference.play();
     } catch (error) {
       console.log(error);
     }
@@ -62,17 +103,44 @@ const VideoRecording = () => {
   }, [videoRef]);
 
   let handelStop = () => {
-    let video = videoRef.current;
-
-    const stream = video.srcObject;
+    const stream = videoReference.srcObject;
     if (stream) {
       const tracks = stream.getTracks();
       tracks.forEach(function (track) {
         track.stop();
       });
 
-      video.srcObject = null;
+      videoReference.srcObject = null;
     }
+  };
+
+  let handelRecordedVideoPlay = () => {
+    videoReference.play();
+    videoReference.muted = false;
+    setPlayingVideoControls(false);
+
+    videoReference.onended = () => {
+      setPlayingVideoControls(true);
+    };
+  };
+  let handelRecordedVideoSave = () => {
+    let video_local = URL.createObjectURL(
+      new Blob(blobs_recorded, { type: "video/webm" })
+    );
+    const a = document.createElement("a");
+    a.href = video_local;
+    a.download = "Video Recorded";
+    a.click();
+
+    setTimeout(() => {
+      history.push("/escort-section");
+    }, 1000);
+  };
+  let handelRecordAgain = () => {
+    getVideo();
+    setPlayingVideoControls(false);
+    setPlayingVideo(false);
+    setstartRecording(false);
   };
 
   return (
@@ -89,13 +157,45 @@ const VideoRecording = () => {
         {/* recording frame */}
         <div className="video-container">
           <video ref={videoRef} className="videoInsert"></video>
-          <div className="record-button-position">
+          <div
+            className="record-button-position"
+            style={{ display: playingVideo ? "none" : "" }}
+          >
             <RecordButton
               onClick={handelRecording}
-              recordStatus={startRecording}
+              onStop={stopRecording}
+              recordStatus={showRecordingScreen}
+              recordStart={startRecording}
             />
           </div>
-          <div className="record-scheme-container">
+
+          <div
+            className="recorded-video-container"
+            style={{
+              display: playingVideo && playingVideoControls ? "flex" : "none",
+            }}
+          >
+            <div
+              className="recorded-video-play"
+              onClick={handelRecordedVideoPlay}
+            >
+              <img src={playVideoIcon} alt="play" />
+            </div>
+            <div className="recorded-video-reload" onClick={handelRecordAgain}>
+              <img src={reloadAgain} alt="reload" />
+            </div>
+            <div
+              className="recorded-video-save"
+              onClick={handelRecordedVideoSave}
+            >
+              <p>Save</p>
+            </div>
+          </div>
+
+          <div
+            className="record-scheme-container"
+            style={{ display: playingVideo ? "none" : "" }}
+          >
             <RecordButtonScheme
               title="Red"
               color={startRecording ? "#FF0000" : ""}
@@ -115,13 +215,15 @@ const VideoRecording = () => {
           </div>
           <div
             className="look-camera-text"
-            style={{ display: startRecording ? "none" : "" }}
+            style={{ display: startRecording || playingVideo ? "none" : "" }}
           >
-            <p>Look in the camera</p>
-            <p>Push Button for Record</p>
-            <p>Read the color</p>
+            {cameraText.map((item, index) => {
+              return <p key={index}>{item}</p>;
+            })}
           </div>
-          <div className={startRecording ? "" : "transperent-background"}></div>
+          <div
+            className={showRecordingScreen ? "" : "transperent-background"}
+          ></div>
           <div className={startRecording ? "recording-timer" : "recording-off"}>
             <p>00:{timer}</p>
           </div>

@@ -17,6 +17,12 @@ import NavigationView from "../Components/NavigationView";
 import { useHistory } from "react-router";
 import LogoSection from "../Components/LogoSection";
 import KeepCareShare from "../Components/KeepCareShare";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const EscortSection = () => {
   let history = useHistory();
@@ -37,6 +43,47 @@ const EscortSection = () => {
   };
   let handelValue = (v) => {
     setCheckShare(v);
+  };
+
+  let hanelImageUpload = (e) => {
+    let file = e.target.files[0];
+    if (file) {
+      uploadFile(file);
+    }
+  };
+
+  let uploadFile = (file) => {
+    const storage = getStorage();
+    const metadata = {
+      contentType: "video/mp4",
+    };
+    const storageRef = ref(storage, "video/" + file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+        });
+      }
+    );
   };
 
   return (
@@ -74,6 +121,7 @@ const EscortSection = () => {
             time="Beginsning 20's"
             rate="20$/Hour, Incall"
             location="02176, Berlin - Incall"
+            uploadImage={(e) => hanelImageUpload(e)}
           />
         </div>
         <div style={{ marginTop: "2rem" }}>
