@@ -6,6 +6,9 @@ import { useHistory } from "react-router";
 import LogoSection from "../Components/LogoSection";
 import playVideoIcon from "../../../assets/images/playButton.svg";
 import reloadAgain from "../../../assets/images/reloadVideo.svg";
+import { uploadFile, updateVideoUrl } from "../../../Utlity/FirebaseFunction";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useLocation } from "react-router-dom";
 
 let timerInterval;
 let sourceStream;
@@ -17,11 +20,14 @@ const VideoRecording = () => {
   const videoRef = useRef();
   let history = useHistory();
 
+  let location = useLocation();
+
   const [startRecording, setstartRecording] = useState(false);
   const [showRecordingScreen, setShowRecordingScreen] = useState(false);
   const [cameraText, setCameraText] = useState(["Look in the camera"]);
   const [playingVideo, setPlayingVideo] = useState(false);
   const [playingVideoControls, setPlayingVideoControls] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -39,9 +45,19 @@ const VideoRecording = () => {
   const [timer, setTimer] = useState(15);
 
   useEffect(() => {
+    if (location.state) {
+      setShowRecordingScreen(true);
+      setPlayingVideoControls(true);
+      setPlayingVideo(true);
+      videoReference = videoRef.current;
+      videoReference.src = location.state.imageUrl;
+      handelRecordedVideoPlay();
+    }
+  }, []);
+
+  useEffect(() => {
     if (timer < 1) {
-      clearInterval(timerInterval);
-      setTimer(15);
+      stopRecording();
     }
   }, [timer]);
 
@@ -99,7 +115,9 @@ const VideoRecording = () => {
   };
 
   useEffect(() => {
-    getVideo();
+    if (!location.state) {
+      getVideo();
+    }
   }, [videoRef]);
 
   let handelStop = () => {
@@ -123,16 +141,30 @@ const VideoRecording = () => {
       setPlayingVideoControls(true);
     };
   };
-  let handelRecordedVideoSave = () => {
-    let video_local = URL.createObjectURL(
-      new Blob(blobs_recorded, { type: "video/webm" })
+  let handelRecordedVideoSave = async () => {
+    // let video_local = URL.createObjectURL(
+    //   new Blob(blobs_recorded, { type: "video/webm" })
+    // );
+    // const a = document.createElement("a");
+    // a.href = video_local;
+    // a.download = "Video Recorded";
+    // a.click();
+
+    let userId = sessionStorage.getItem("userId");
+    setLoading(true);
+    let blobData = new Blob(blobs_recorded, { type: "video/webm" });
+    let result = await uploadFile(
+      blobData,
+      "video/mp4",
+      userId + "Video",
+      "video/"
     );
-    const a = document.createElement("a");
-    a.href = video_local;
-    a.download = "Video Recorded";
-    a.click();
+    setLoading(false);
+
+    updateVideoUrl(userId, result);
 
     setTimeout(() => {
+      handelStop();
       history.push("/escort-section");
     }, 1000);
   };
@@ -188,6 +220,18 @@ const VideoRecording = () => {
               className="recorded-video-save"
               onClick={handelRecordedVideoSave}
             >
+              <div>
+                <CircularProgress
+                  disableShrink
+                  style={{
+                    width: "25px",
+                    height: "25px",
+                    marginRight: "10px",
+                    color: "#577954",
+                    display: loading ? "flex" : "none",
+                  }}
+                />
+              </div>
               <p>Save</p>
             </div>
           </div>

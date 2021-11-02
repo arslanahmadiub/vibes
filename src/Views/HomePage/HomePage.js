@@ -17,7 +17,6 @@ const Home1 = () => {
     getToken(messaging, { vapidKey: vaPidKey })
       .then((currentToken) => {
         if (currentToken) {
-          console.log(currentToken);
         } else {
           // Show permission request UI
           console.log(

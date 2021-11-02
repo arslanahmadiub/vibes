@@ -1,19 +1,18 @@
 import React from "react";
 import model2 from "../../../assets/images/model2.jpg";
 import "./bankComponents.css";
-import uploadIcon from "../../../assets/images/uploadPlusIcon.svg";
+import playIcon from "../../../assets/images/playButton.svg";
 
-const WorkerVideo = ({ uploadImage }) => {
+const WorkerVideo = ({ playVideo, videoUrl }) => {
   return (
     <div className="profile-video-container">
       <div className="profile-video">
-        <img src={model2} alt="Image" />
+        {/* <img src={videoUrl} alt="Image" className="modelVideo" /> */}
 
-        <div className="input-video">
-          <label for="file-input">
-            <img src={uploadIcon} alt="upload" className="upload-model-video" />
-          </label>
-          <input id="file-input" type="file" onChange={uploadImage} />
+        <video src={videoUrl} className="modelVideo"></video>
+
+        <div className="input-video" onClick={playVideo}>
+          <img src={playIcon} alt="image-play" className="play-button" />
         </div>
       </div>
       <div className="profile-brief">

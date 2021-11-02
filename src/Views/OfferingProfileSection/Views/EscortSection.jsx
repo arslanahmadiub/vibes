@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import infoLog from "../../../assets/images/VibesInfo.svg";
 import closeIcon from "../../../assets/images/delete.svg";
@@ -17,17 +17,20 @@ import NavigationView from "../Components/NavigationView";
 import { useHistory } from "react-router";
 import LogoSection from "../Components/LogoSection";
 import KeepCareShare from "../Components/KeepCareShare";
+
 import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+  updateImageUrl,
+  uploadFile,
+  getUserData,
+} from "../../../Utlity/FirebaseFunction";
 
 const EscortSection = () => {
   let history = useHistory();
   const [workerType, setWorkerType] = useState("Escort");
   const [checkShare, setCheckShare] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
 
   let handelEscort = (e) => {
     setWorkerType(e);
@@ -45,45 +48,50 @@ const EscortSection = () => {
     setCheckShare(v);
   };
 
-  let hanelImageUpload = (e) => {
+  let hanelImageUpload = async (e) => {
     let file = e.target.files[0];
     if (file) {
-      uploadFile(file);
+      let userId = sessionStorage.getItem("userId");
+      setLoading(true);
+
+      let result = await uploadFile(
+        file,
+        "image/jpeg",
+        userId + "Image",
+        "image/"
+      );
+
+      await updateImageUrl(userId, result);
+      setLoading(false);
+      await getImageAndVideo();
     }
   };
 
-  let uploadFile = (file) => {
-    const storage = getStorage();
-    const metadata = {
-      contentType: "video/mp4",
-    };
-    const storageRef = ref(storage, "video/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+  useEffect(() => {
+    getImageAndVideo();
+  }, []);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-        });
+  let getImageAndVideo = async () => {
+    let userId = sessionStorage.getItem("userId");
+    try {
+      let result = await getUserData(userId);
+      if (result) {
+        setImageUrl(result.imageUrl);
+        setVideoUrl(result.videoUrl);
       }
-    );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  let handelPlayVideo = (url) => {
+    history.push({
+      pathname: "/record-video",
+      state: {
+        imageUrl: url,
+        fromBack: true,
+      },
+    });
   };
 
   return (
@@ -121,11 +129,16 @@ const EscortSection = () => {
             time="Beginsning 20's"
             rate="20$/Hour, Incall"
             location="02176, Berlin - Incall"
+            loading={loading}
+            image={imageUrl}
             uploadImage={(e) => hanelImageUpload(e)}
           />
         </div>
         <div style={{ marginTop: "2rem" }}>
-          <WorkerVideo />
+          <WorkerVideo
+            videoUrl={videoUrl}
+            playVideo={() => handelPlayVideo(videoUrl)}
+          />
         </div>
         <div style={{ marginTop: "2rem" }}>
           <p className="rate-head-line">Basic Rate Per Hour:</p>

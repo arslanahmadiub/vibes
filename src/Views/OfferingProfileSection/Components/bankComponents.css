@@ -203,7 +203,7 @@
   display: none;
 }
 
-.profile-video img {
+.profile-video .modelVideo {
   box-sizing: border-box;
   width: 8.5rem;
   height: 8.5rem;
@@ -211,6 +211,25 @@
   border-radius: 2rem;
   border: 2px solid var(--border-color);
 }
+.input-video {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  background: white;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+.input-video .play-button {
+  border: none;
+  width: 10px;
+  height: 10px;
+}
+
 .profile-brief {
   flex: 1;
 
