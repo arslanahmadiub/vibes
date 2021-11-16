@@ -17,6 +17,15 @@ import ConfirmYou from "./Views/OfferingProfileSection/Views/ConfirmYou";
 import ExperienceLevel from "./Views/OfferingProfileSection/Views/ExperienceLevel";
 import ReceiptSection from "./Views/OfferingProfileSection/Views/ReceiptSection";
 import DemoVideoRecording from "./Views/OfferingProfileSection/Views/DemoVideoRecording";
+import DateRequest from "./Views/DateRequestFromSexWorker/DateRequest";
+import DateChatScreen from "./Views/DateRequestFromSexWorker/DateChatScreen";
+import DateConfirmFromSexWorker from "./Views/DateRequestFromSexWorker/DateConfirmFromSexWorker";
+import RequestFromSexWorker from "./Views/DateRequestFromSexWorker/RequestFromSexWorker";
+import QrScannerFromSexWorker from "./Views/DateRequestFromSexWorker/QrScannerFromSexWorker";
+import DateConfirmProfileFromSexWorker from "./Views/DateRequestFromSexWorker/DateConfirmProfileFromSexWorker";
+import QrCodeProfileFromSexWorker from "./Views/DateRequestFromSexWorker/QrCodeProfileFromSexWorker";
+import RequestAnswerFromSexWorker from "./Views/DateRequestFromSexWorker/RequestAnswerFromSexWorker";
+import UserListWithSelectedProfile from "./Views/DateRequestFromSexWorker/UserListWithSelectedProfile";
 
 const App = () => {
   const [innerHeightDiv, setInnerHeightDiv] = useState(0);
@@ -31,8 +40,6 @@ const App = () => {
     <Switch>
       <Route exact path="/">
         <HomePage />
-
-        {/* <ReceiptSection /> */}
       </Route>
 
       <Route exact path="/confirm">
@@ -55,6 +62,37 @@ const App = () => {
       </Route>
       <Route exact path="/bankdetails-section">
         <BankDetails />
+      </Route>
+      <Route exact path="/bankdetails-receipt">
+        <ReceiptSection />
+      </Route>
+
+      <Route exact path="/date-request">
+        <DateRequest />
+      </Route>
+      <Route exact path="/date-chat">
+        <DateChatScreen />
+      </Route>
+      <Route exact path="/date-confirm-from-sex-worker">
+        <DateConfirmFromSexWorker />
+      </Route>
+      <Route exact path="/request-from-sexworker">
+        <RequestFromSexWorker />
+      </Route>
+      <Route exact path="/qr-scanner-from-sexworker">
+        <QrScannerFromSexWorker />
+      </Route>
+      <Route exact path="/date-confirm-profile">
+        <DateConfirmProfileFromSexWorker />
+      </Route>
+      <Route exact path="/qr-code-profile">
+        <QrCodeProfileFromSexWorker />
+      </Route>
+      <Route exact path="/request-answer-from-sexworker">
+        <RequestAnswerFromSexWorker />
+      </Route>
+      <Route exact path="/selected-user-profiles">
+        <UserListWithSelectedProfile />
       </Route>
 
       <Route exact path="/login">

@@ -13,7 +13,7 @@ const BankDetails = () => {
   let history = useHistory();
 
   let handelNext = () => {
-    history.push("/");
+    history.push("/date-request");
   };
 
   return (

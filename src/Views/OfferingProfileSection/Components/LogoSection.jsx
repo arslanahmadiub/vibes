@@ -33,7 +33,11 @@ const LogoSection = (props) => {
         <img
           src={backIcon}
           alt="Close Icon"
-          style={{ width: "13px", marginTop: "5px" }}
+          style={{
+            width: "13px",
+            marginTop: "5px",
+            display: props.hideBack ? "none" : "flex",
+          }}
           onClick={goBack}
         />
       </div>
