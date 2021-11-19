@@ -136,8 +136,8 @@ const EscortSection = () => {
         </div>
         <div style={{ marginTop: "2rem" }}>
           <WorkerVideo
-            videoUrl={videoUrl}
-            playVideo={() => handelPlayVideo(videoUrl)}
+          // videoUrl={videoUrl}
+          // playVideo={() => handelPlayVideo(videoUrl)}
           />
         </div>
         <div style={{ marginTop: "2rem" }}>

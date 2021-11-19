@@ -7,9 +7,9 @@ const WorkerVideo = ({ playVideo, videoUrl }) => {
   return (
     <div className="profile-video-container">
       <div className="profile-video">
-        {/* <img src={videoUrl} alt="Image" className="modelVideo" /> */}
+        <img src={model2} alt="Image" className="modelVideo" />
 
-        <video src={videoUrl} className="modelVideo"></video>
+        {/* <video src={videoUrl} className="modelVideo"></video> */}
 
         <div className="input-video" onClick={playVideo}>
           <img src={playIcon} alt="image-play" className="play-button" />

@@ -17,7 +17,7 @@ const WorkerProfile = ({
   return (
     <div className="profile-container">
       <div className="profile-image">
-        <img src={image} alt="Image" className="model-image" />
+        <img src={model1} alt="Image" className="model-image" />
         <div className="input-image">
           <label for="file-input">
             <img src={uploadIcon} alt="upload" className="upload-model-image" />
