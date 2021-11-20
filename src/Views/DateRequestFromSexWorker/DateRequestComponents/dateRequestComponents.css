@@ -466,7 +466,7 @@
 .chat-screen-container {
   display: block;
   width: 100%;
-  height: 50vh;
+  height: calc(100vh - 420px);
   margin-top: 20px;
   position: relative;
   overflow: auto;

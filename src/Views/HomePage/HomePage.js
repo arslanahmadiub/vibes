@@ -8,7 +8,12 @@ import { modelImages } from "../../Dummy/dummy";
 import { vaPidKey } from "../../config/config";
 import { getMessaging, getToken } from "firebase/messaging";
 
+import selectIcon from "../../assets/images/selectCrossIcon.svg";
+import { useLocation } from "react-router";
+
 const Home1 = () => {
+  let location = useLocation();
+  console.log(location);
   let isLogin = sessionStorage.getItem("isLogin");
   const [innerHeight, setInnerHeight] = useState(0);
 
@@ -205,6 +210,7 @@ const Home1 = () => {
                 id={`insid${index}`}
                 style={{ padding: "3px" }}
                 onClick={() => handelImageClick()}
+                style={{ position: "relative" }}
               >
                 <img
                   src={item.image}
@@ -214,6 +220,20 @@ const Home1 = () => {
                   }}
                   alt="Model Profile"
                 />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    right: "10px",
+                    display: location.state !== undefined ? "flex" : "none",
+                  }}
+                >
+                  <img
+                    src={selectIcon}
+                    alt="select"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                </div>
               </div>
             );
           })}
