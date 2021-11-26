@@ -10,6 +10,9 @@ import ErrorAlert from "../../Components/CustomAlert/ErrorAlert";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 import moment from "moment";
+
+import { expiryValue } from "../../config/UtlityConfig";
+
 const VerificationOtp = (props) => {
   let history = useHistory();
   let location = useLocation();
@@ -100,13 +103,13 @@ const VerificationOtp = (props) => {
             const user = result.user;
 
             if (userData !== false) {
-              if (userData.expiry === "72 Hours") {
+              if (userData.expiry === expiryValue.text) {
                 var duration = moment.duration(
                   moment().diff(userData.createDate)
                 );
                 var time = duration.asHours();
 
-                if (time > 72) {
+                if (time > expiryValue.value) {
                   history.push({
                     pathname: "/gender-selection",
                     state: {

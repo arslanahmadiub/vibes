@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import "./genderButtonGroup.css";
 import plusIcon from "../../../assets/images/plusIcon.svg";
 import orIcon from "../../../assets/images/orIcon.svg";
+import { Language } from "../../../config/TitleConfig";
+
+import { useSelector } from "react-redux";
 
 const GenderButtonGroup = (props) => {
   const [selectedGenderList, setSelectedGenderList] = useState([]);
+  const language = useSelector((state) => state.languageData.language);
 
   let handelGenderClick = (e) => {
     let genderList = [...selectedGenderList];
@@ -23,27 +27,45 @@ const GenderButtonGroup = (props) => {
       <div className="gender-group">
         <div
           className={`female-section ${
-            selectedGenderList.includes("Female") ? "selected-gender" : ""
+            selectedGenderList.includes(
+              Language[language].genderButtonGroup.female
+            )
+              ? "selected-gender"
+              : ""
           }`}
-          onClick={() => handelGenderClick("Female")}
+          onClick={() =>
+            handelGenderClick(Language[language].genderButtonGroup.female)
+          }
         >
-          <p>Female</p>
+          <p>{Language[language].genderButtonGroup.female}</p>
         </div>
         <div
           className={`male-section  ${
-            selectedGenderList.includes("Male") ? "selected-gender" : ""
+            selectedGenderList.includes(
+              Language[language].genderButtonGroup.male
+            )
+              ? "selected-gender"
+              : ""
           }`}
-          onClick={() => handelGenderClick("Male")}
+          onClick={() =>
+            handelGenderClick(Language[language].genderButtonGroup.male)
+          }
         >
-          <p>Male</p>
+          <p>{Language[language].genderButtonGroup.male}</p>
         </div>
         <div
           className={`divers-section  ${
-            selectedGenderList.includes("Divers") ? "selected-gender" : ""
+            selectedGenderList.includes(
+              Language[language].genderButtonGroup.divers
+            )
+              ? "selected-gender"
+              : ""
           }`}
-          onClick={() => handelGenderClick("Divers")}
+          onClick={() =>
+            handelGenderClick(Language[language].genderButtonGroup.divers)
+          }
         >
-          <p>Divers</p>
+          <p>{Language[language].genderButtonGroup.divers}</p>
         </div>
         <div className="or-container">
           <div className="or-line">
@@ -51,8 +73,12 @@ const GenderButtonGroup = (props) => {
             <div className="or-circle">
               <img
                 src={
-                  selectedGenderList.includes("Female") &&
-                  selectedGenderList.includes("Male")
+                  selectedGenderList.includes(
+                    Language[language].genderButtonGroup.female
+                  ) &&
+                  selectedGenderList.includes(
+                    Language[language].genderButtonGroup.male
+                  )
                     ? plusIcon
                     : orIcon
                 }
@@ -65,8 +91,12 @@ const GenderButtonGroup = (props) => {
               <div className="or-circle">
                 <img
                   src={
-                    selectedGenderList.includes("Divers") &&
-                    selectedGenderList.includes("Male")
+                    selectedGenderList.includes(
+                      Language[language].genderButtonGroup.divers
+                    ) &&
+                    selectedGenderList.includes(
+                      Language[language].genderButtonGroup.male
+                    )
                       ? plusIcon
                       : orIcon
                   }

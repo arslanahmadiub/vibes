@@ -14,52 +14,79 @@ import Slider from "@material-ui/core/Slider";
 import { useHistory } from "react-router";
 import LookingOfferingButtonGroup from "../../Components/CustomButtonGroup/LookingOfferingButtonGroup/LookingOfferingButtonGroup";
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../Firebase/firebase";
+import { db, auth } from "../../Firebase/firebase";
+import { Language } from "../../config/TitleConfig";
+import { useSelector } from "react-redux";
 
 const SearchLogin = () => {
   const [indecator, setIndecator] = useState(0);
   const [openBottom, setOpenBottom] = useState(false);
   const [value, setValue] = useState([28, 42]);
+
+  const language = useSelector((state) => state.languageData.language);
+
   let history = useHistory();
   let isLogin = sessionStorage.getItem("isLogin");
 
   const [marks, setMarks] = useState([
     {
       value: 18,
-      label: "Twenty's",
+      label: Language[language].ageSlider.twenty,
     },
 
     {
       value: 28,
-      label: "Middle 20's",
+      label: Language[language].ageSlider.mTwenty,
     },
     {
       value: 42,
-      label: "Forty's",
+      label: Language[language].ageSlider.forty,
     },
 
     {
       value: 65,
-      label: "Fifty's +",
+      label: Language[language].ageSlider.fifty,
     },
   ]);
+  useEffect(() => {
+    setMarks([
+      {
+        value: 18,
+        label: Language[language].ageSlider.twenty,
+      },
+
+      {
+        value: 28,
+        label: Language[language].ageSlider.mTwenty,
+      },
+      {
+        value: 42,
+        label: Language[language].ageSlider.forty,
+      },
+
+      {
+        value: 65,
+        label: Language[language].ageSlider.fifty,
+      },
+    ]);
+  }, [language]);
 
   let levelMarks = [
     {
       value: 1,
-      label: "All",
+      label: Language[language].matchingSlider.all,
     },
     {
       value: 2,
-      label: "Just me",
+      label: Language[language].matchingSlider.justMe,
     },
     {
       value: 3,
-      label: "Open mind",
+      label: Language[language].matchingSlider.openMind,
     },
     {
       value: 4,
-      label: "Fetish",
+      label: Language[language].matchingSlider.fetish,
     },
   ];
 
@@ -87,7 +114,11 @@ const SearchLogin = () => {
     let newMarkArray = [
       {
         label:
-          newValue[0] === newValue[1] ? "" : newValue[0] < 28 ? "" : "Twenty's",
+          newValue[0] === newValue[1]
+            ? ""
+            : newValue[0] < 28
+            ? ""
+            : Language[language].ageSlider.twenty,
         value: 18,
       },
       {
@@ -95,18 +126,18 @@ const SearchLogin = () => {
           newValue[0] === newValue[1]
             ? ""
             : newValue[0] < 23
-            ? "Twenty's"
+            ? Language[language].ageSlider.twenty
             : newValue[0] <= 27 && newValue[0] >= 23
-            ? "Middle 20's"
+            ? Language[language].ageSlider.mTwenty
             : newValue[0] >= 28 && newValue[0] <= 32
-            ? "Thirty's"
+            ? Language[language].ageSlider.thirty
             : newValue[0] > 32 && newValue[0] <= 37
-            ? "Middle 30's"
+            ? Language[language].ageSlider.mThirty
             : newValue[0] >= 38 && newValue[0] <= 42
-            ? "Forty's"
+            ? Language[language].ageSlider.forty
             : newValue[0] >= 43 && newValue[0] <= 47
-            ? "Middle 40's"
-            : "Fifty's +",
+            ? Language[language].ageSlider.mforty
+            : Language[language].ageSlider.fifty,
         value: newValue[0],
       },
       {
@@ -114,16 +145,16 @@ const SearchLogin = () => {
           newValue[0] === newValue[1]
             ? ""
             : newValue[1] < 27
-            ? "Middle 20's"
+            ? Language[language].ageSlider.twenty
             : newValue[1] >= 27 && newValue[1] <= 32
-            ? "Thirty's"
+            ? Language[language].ageSlider.thirty
             : newValue[1] > 32 && newValue[1] <= 37
-            ? "Middle 30's"
+            ? Language[language].ageSlider.mThirty
             : newValue[1] >= 38 && newValue[1] <= 42
-            ? "Forty's"
+            ? Language[language].ageSlider.forty
             : newValue[1] >= 43 && newValue[1] <= 47
-            ? "Middle 40's"
-            : "Fifty's +",
+            ? Language[language].ageSlider.mforty
+            : Language[language].ageSlider.fifty,
 
         value: newValue[1],
       },
@@ -133,7 +164,7 @@ const SearchLogin = () => {
             ? ""
             : newValue[1] > 47
             ? ""
-            : "Fifty's +",
+            : Language[language].ageSlider.fifty,
 
         value: 65,
       },
@@ -250,6 +281,16 @@ const SearchLogin = () => {
     let uid = sessionStorage.getItem("userId");
     try {
       await deleteDoc(doc(db, "users", uid));
+
+      // auth()
+      //   .getUser("20aF90Q8v8dBkFdTHGJ2lb84qdj2")
+      //   .then((userRecord) => {
+      //     // See the UserRecord reference doc for the contents of userRecord.
+      //     console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+      //   })
+      //   .catch((error) => {
+      //     console.log("Error fetching user data:", error);
+      //   });
       sessionStorage.removeItem("isLogin");
       sessionStorage.removeItem("userId");
       window.location.reload();
@@ -322,14 +363,14 @@ const SearchLogin = () => {
       </div>
 
       <div style={{ marginTop: "10px" }}>
-        <p className="create-profile">Creating Profile</p>
+        <p className="create-profile">{Language[language].creating_profile}</p>
       </div>
       <div style={{ marginTop: "10px" }}>
         {isLogin !== null ? (
           <LookingOfferingButtonGroup width="80vw" />
         ) : (
           <button className="login-registration" onClick={handelLogin}>
-            Login & Registration
+            {Language[language].login_registration}
           </button>
         )}
       </div>
@@ -340,7 +381,7 @@ const SearchLogin = () => {
         <>
           <div className="search-line " style={{ zIndex: "-2" }}>
             <div className="inside-search-line" style={{ zIndex: "-1" }}>
-              <p>Search - Filter</p>
+              <p>{Language[language].search_filter}</p>
             </div>
           </div>
 
@@ -385,7 +426,7 @@ const SearchLogin = () => {
             />
           </div>
           <div className="location-input">
-            <input type="text" placeholder="Location" />
+            <input type="text" placeholder={Language[language].location} />
           </div>
 
           <div className="distance-slider">

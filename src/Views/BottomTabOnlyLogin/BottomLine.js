@@ -4,14 +4,21 @@ import radioEmpty from "../../assets/images/radio empty.svg";
 import germenFlage from "../../assets/images/flageGermeny.svg";
 import englandFlage from "../../assets/images/flageEngland.svg";
 import "./bottomTabsOnlyLogin.css";
+import { setLanguage } from "../../redux/action/languageAction";
+import { useDispatch } from "react-redux";
+
 const BottomLine = () => {
   const [isEnglish, setIsEnglish] = useState(true);
+  const dispatch = useDispatch();
 
   let handelEnglish = () => {
+    dispatch(setLanguage("English"));
     setIsEnglish(true);
   };
 
   let handelGermen = () => {
+    dispatch(setLanguage("German"));
+
     setIsEnglish(false);
   };
 
@@ -32,7 +39,7 @@ const BottomLine = () => {
           onClick={handelGermen}
         />
       )}
-      <p>Ger</p>
+      <p style={{ fontSize: !isEnglish && "1rem" }}>Ger</p>
 
       {isEnglish ? (
         <img src={englandFlage} alt="England Flage" className="country-flage" />
@@ -55,13 +62,17 @@ const BottomLine = () => {
           onClick={handelEnglish}
         />
       )}
-      <p>Eng</p>
+      <p style={{ fontSize: !isEnglish && "1rem" }}>Eng</p>
       <div className="verticle-line"></div>
-      <p>Support</p>
+      <p style={{ fontSize: !isEnglish && "1rem" }}>
+        {isEnglish ? "Support" : "Unterstützung"}
+      </p>
       <div className="verticle-line"></div>
-      <p>Impressum</p>
+      <p style={{ fontSize: !isEnglish && "1rem" }}>Impressum</p>
       <div className="verticle-line"></div>
-      <p>GTC</p>
+      <p style={{ fontSize: !isEnglish && "1rem" }}>
+        {isEnglish ? "GTC" : "AGB"}
+      </p>
     </div>
   );
 };

@@ -13,7 +13,7 @@ import { useLocation } from "react-router";
 
 const Home1 = () => {
   let location = useLocation();
-  console.log(location);
+
   let isLogin = sessionStorage.getItem("isLogin");
   const [innerHeight, setInnerHeight] = useState(0);
 

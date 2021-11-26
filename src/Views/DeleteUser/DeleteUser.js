@@ -9,7 +9,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import backIcon from "../../assets/images/back.svg";
 import { db } from "../../Firebase/firebase";
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
-
+import { expiryValue } from "../../config/UtlityConfig";
 const DeleteUser = (props) => {
   let history = useHistory();
   const [searchGender, setSearchGender] = useState("");
@@ -119,7 +119,8 @@ const DeleteUser = (props) => {
               <ButtonGroup size="large">
                 <Button
                   style={{
-                    color: searchGender === "72 Hours" ? "green" : "#9E9E9E",
+                    color:
+                      searchGender === expiryValue.text ? "green" : "#9E9E9E",
                     textTransform: "none",
                     fontSize: "15px",
                     fontWeight: "bold",
@@ -127,7 +128,7 @@ const DeleteUser = (props) => {
                   }}
                   onClick={handelGenderClick}
                 >
-                  72 Hours
+                  {expiryValue.text}
                 </Button>
                 <Button
                   onClick={handelGenderClick}
