@@ -38,6 +38,9 @@ const ConfirmYou = () => {
       setCheckConfirm(true);
     }
   };
+  let handelClose = () => {
+    history.push("/");
+  };
 
   return (
     <div className="div-background" style={{ height: "100vh" }}>
@@ -47,7 +50,7 @@ const ConfirmYou = () => {
           <div>
             <img src={infoLog} alt="Info Logo" style={{ width: "100px" }} />
           </div>
-          <div>
+          <div onClick={handelClose}>
             <img src={closeIcon} alt="Close Icon" style={{ width: "15px" }} />
           </div>
         </div>
